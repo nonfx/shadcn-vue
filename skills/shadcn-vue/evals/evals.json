@@ -1,0 +1,48 @@
+{
+  "skill_name": "shadcn-vue",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building a Vue app with shadcn-vue. Create a settings form component with fields for: full name, email address, and notification preferences (email, SMS, push notifications as switch toggles). Add validation using vee-validate and zod.",
+      "expected_output": "A Vue SFC using <script setup>, Label + Input for text fields, Switch for toggles, vee-validate for form handling, gap-* spacing, and semantic colors.",
+      "files": [],
+      "expectations": [
+        "Uses <script setup lang='ts'> pattern",
+        "Uses Label and Input components from shadcn-vue for form fields",
+        "Uses Switch for independent on/off notification toggles",
+        "Uses vee-validate with zod schema for validation",
+        "Uses gap-* (e.g. gap-4, gap-6) instead of space-y-* or space-x-* for spacing",
+        "Uses semantic color tokens (e.g. bg-background, text-muted-foreground, text-destructive) instead of raw colors",
+        "No manual dark: color overrides"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create a dialog component for editing a user profile. It should have the user's avatar at the top, input fields for name and bio, and Save/Cancel buttons. Using shadcn-vue with lucide-vue-next icons.",
+      "expected_output": "A Vue SFC with DialogTitle, Avatar+AvatarFallback, lucide-vue-next icon imports, proper Dialog composition.",
+      "files": [],
+      "expectations": [
+        "Includes DialogTitle for accessibility (visible or with sr-only class)",
+        "Avatar component includes AvatarFallback",
+        "Uses lucide-vue-next for icon imports",
+        "Uses <script setup> pattern with proper TypeScript",
+        "Uses full Dialog composition (DialogContent, DialogHeader, DialogTitle, DialogDescription)",
+        "Uses gap-* instead of space-y-* for spacing"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Create a dashboard component that shows 4 stat cards in a grid. Each card has a title, large number, percentage change badge, and a loading skeleton state. Using shadcn-vue.",
+      "expected_output": "A Vue SFC with full Card composition, Skeleton for loading, Badge for changes, semantic colors, gap-* spacing.",
+      "files": [],
+      "expectations": [
+        "Uses full Card composition with CardHeader, CardTitle, CardContent (not dumping everything into CardContent)",
+        "Uses Skeleton component for loading placeholders instead of custom animate-pulse divs",
+        "Uses Badge component for percentage change instead of custom styled spans",
+        "Uses semantic color tokens instead of raw color values like bg-green-500 or text-red-600",
+        "Uses gap-* instead of space-y-* or space-x-* for spacing",
+        "Uses size-* when width and height are equal instead of separate w-* h-*"
+      ]
+    }
+  ]
+}

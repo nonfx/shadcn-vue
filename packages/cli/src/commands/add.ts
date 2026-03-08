@@ -11,6 +11,8 @@ import { DEPRECATED_COMPONENTS } from '@/src/registry/constants'
 import { clearRegistryContext } from '@/src/registry/context'
 import { isUniversalRegistryItem } from '@/src/registry/utils'
 import { addComponents } from '@/src/utils/add-components'
+import { dryRunComponents } from '@/src/utils/dry-run'
+import { formatDryRunResult } from '@/src/utils/dry-run-formatter'
 // import { createProject } from '@/src/utils/create-project'
 import { loadEnvFiles } from '@/src/utils/env-loader'
 import * as ERRORS from '@/src/utils/errors'
@@ -32,6 +34,9 @@ export const addOptionsSchema = z.object({
   silent: z.boolean(),
   srcDir: z.boolean().optional(),
   cssVariables: z.boolean(),
+  dryRun: z.boolean(),
+  diff: z.union([z.string(), z.boolean()]).optional(),
+  view: z.union([z.string(), z.boolean()]).optional(),
 })
 
 export const add = new Command()
@@ -59,6 +64,9 @@ export const add = new Command()
   // )
   .option('--css-variables', 'use css variables for theming.', true)
   .option('--no-css-variables', 'do not use css variables for theming.')
+  .option('--dry-run', 'preview all changes without writing files.', false)
+  .option('--diff [path]', 'show diffs for changes (implies --dry-run).')
+  .option('--view [path]', 'show file contents (implies --dry-run).')
   .action(async (components, opts) => {
     try {
       const options = addOptionsSchema.parse({
@@ -241,6 +249,20 @@ export const add = new Command()
         },
       )
       config = updatedConfig
+
+      // Handle dry-run mode: --dry-run, --diff, or --view
+      const isDryRun = options.dryRun || options.diff !== undefined || options.view !== undefined
+      if (isDryRun && options.components?.length) {
+        const dryRunResult = await dryRunComponents(options.components, config, {
+          overwrite: options.overwrite,
+        })
+        const output = formatDryRunResult(dryRunResult, options.components, {
+          diff: options.diff === true || typeof options.diff === 'string' ? options.diff : undefined,
+          view: options.view === true || typeof options.view === 'string' ? options.view : undefined,
+        })
+        logger.log(output)
+        return
+      }
 
       if (!initHasRun) {
         await addComponents(options.components, config, {
