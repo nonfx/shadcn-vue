@@ -129,7 +129,8 @@ async function processFiles(
     const existingFile = existsSync(filePath)
     const relativePath = path.relative(config.resolvedPaths.cwd, filePath)
 
-    const content = isEnvFile(filePath)
+    const isNonTransformable = isEnvFile(filePath) || filePath.endsWith('.svg')
+    const content = isNonTransformable
       ? file.content
       : await transform({
           filename: file.path,

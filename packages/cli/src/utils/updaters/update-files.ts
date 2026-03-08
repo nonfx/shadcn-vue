@@ -114,8 +114,9 @@ export async function updateFiles(
     }
 
     // Run our transformers.
-    // Skip transformers for .env files to preserve exact content
-    const content = isEnvFile(filePath)
+    // Skip transformers for .env and .svg files to preserve exact content
+    const isNonTransformable = isEnvFile(filePath) || filePath.endsWith('.svg')
+    const content = isNonTransformable
       ? file.content
       : await transform(
           {

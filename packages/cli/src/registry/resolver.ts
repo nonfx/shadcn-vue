@@ -86,6 +86,13 @@ export async function fetchRegistryItems(
 
       if (item.startsWith("@") && config?.registries) {
         const paths = resolveRegistryItemsFromRegistries([item], config)
+        const resolvedPath = paths[0]
+
+        // If the resolved path is a local file, fetch it locally
+        if (resolvedPath && isLocalFile(resolvedPath)) {
+          return fetchRegistryLocal(resolvedPath)
+        }
+
         const [result] = await fetchRegistry(paths, options)
         try {
           return registryItemSchema.parse(result)
